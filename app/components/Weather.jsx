@@ -1,18 +1,20 @@
 var React = require('react');
 var WeatherForm = require('WeatherForm');
 var WeatherMessage = require('WeatherMessage');
+var ErrorModal = require('ErrorModal');
 var openWeatherMap = require('openWeatherMap');
 
 var Weather = React.createClass({
 	getInitialState: function(){
 		return {
-				isLoading: false
+				isLoading: false,
+				errorMessage: undefined
 		}
 	},
 	handleSearch: function(location){
 		var that = this;
 
-		this.setState({isLoading: true})
+		this.setState({isLoading: true, errorMessage: undefined})
 
 		const OPEN_WEATHER_MAP_URL = 'http://api.openweathermap.org/data/2.5/weather?appid=c75de935da6e48f9df16b4fada175dc5&units=metric';
 		var encodedLocation = encodeURIComponent(location);
@@ -32,14 +34,14 @@ var Weather = React.createClass({
 			})
 			.catch(function(err) {
 			// Error :(
-			console.log(err);
 			that.setState({
-				isLoading: false
+				isLoading: false,
+				errorMessage: err.message
 			})
 			});
 	},
 	render: function () {
-		var {temp, location, isLoading} = this.state;
+		var {temp, location, isLoading, errorMessage} = this.state;
 
 		function renderMessage(){
 			if(isLoading){
@@ -49,11 +51,18 @@ var Weather = React.createClass({
 			}
 		};
 
+		function renderError(){
+			if(typeof errorMessage === "string"){
+				return <ErrorModal message={errorMessage}/>
+			}
+		};
+
 		return (
 			<div>
 				<h2 className="text-center">Weather Component</h2>
 				<WeatherForm onSearch={this.handleSearch}/>
 				{renderMessage()}
+				{renderError()}
 			</div>
 
 		);
