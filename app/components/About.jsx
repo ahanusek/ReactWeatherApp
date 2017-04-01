@@ -3,8 +3,8 @@ var React = require('react');
 var About = props => {
 	return(
 		<div>
-			<h3>About</h3>
-			<p>Welcome to about page</p>
+			<h1 className="text-center">About</h1>
+			<p>This is my first attempt with ReactJS. Check my other projects on <a target="_blank" href="https://github.com/hanys92">Github</a>.</p>
 		</div>
 	)
 }
