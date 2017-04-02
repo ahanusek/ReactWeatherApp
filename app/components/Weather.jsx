@@ -14,7 +14,12 @@ var Weather = React.createClass({
 	handleSearch: function(location){
 		var that = this;
 
-		this.setState({isLoading: true, errorMessage: undefined})
+		this.setState({
+			isLoading: true,
+			errorMessage: undefined,
+			location: undefined,
+			temp: undefined
+		});
 
 		const OPEN_WEATHER_MAP_URL = 'http://api.openweathermap.org/data/2.5/weather?appid=c75de935da6e48f9df16b4fada175dc5&units=metric';
 		var encodedLocation = encodeURIComponent(location);
@@ -39,6 +44,22 @@ var Weather = React.createClass({
 				errorMessage: err.message
 			})
 			});
+	},
+	componentDidMount: function(){
+		var location = this.props.location.query.location;
+
+		if (location && location.length >  0 ) {
+			this.handleSearch(location);
+			window.location.hash = '#/';
+		}
+	},
+	componentWillReceiveProps: function(newProps){
+		var location = newProps.location.query.location;
+
+		if (location && location.length >  0 ) {
+			this.handleSearch(location);
+			window.location.hash = '#/';
+		}
 	},
 	render: function () {
 		var {temp, location, isLoading, errorMessage} = this.state;
